@@ -22,6 +22,15 @@ target_link_libraries(libcamera-jpeg libcamera_app images)
 
 set(EXECUTABLES libcamera-still libcamera-vid libcamera-hello libcamera-raw libcamera-jpeg)
 
+project(libcamera-wrap VERSION 1.0.1)
+add_library(libcamera-wrap STATIC libcamera_wrap.cpp)
+target_link_libraries(libcamera-wrap libcamera_app)
+set_target_properties(libcamera-wrap PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION 1
+    PUBLIC_HEADER api/libcamera_wrap.h)
+set(EXECUTABLES ${EXECUTABLES} libcamera-wrap)
+
 if (ENABLE_TFLITE)
     project(libcamera-detect)
     add_executable(libcamera-detect libcamera_detect.cpp)

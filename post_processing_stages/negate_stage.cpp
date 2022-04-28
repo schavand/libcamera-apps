@@ -28,6 +28,9 @@ public:
 
 private:
 	Stream *stream_;
+	uint32_t taille=0;
+	uint8_t *ptrm,*ptrp;
+
 };
 
 #define NAME "negate"
@@ -45,12 +48,21 @@ void NegateStage::Configure()
 bool NegateStage::Process(CompletedRequestPtr &completed_request)
 {
 	libcamera::Span<uint8_t> buffer = app_->Mmap(completed_request->buffers[stream_])[0];
-	uint32_t *ptr = (uint32_t *)buffer.data();
-
+	uint8_t *ptr = (uint8_t *)buffer.data();
+//	uint32_t taille=4L*buffer.size()/6;
+//	uint8_t *ptrm=ptr+taille,*ptrp=ptr+5L*taille/4;
+//	uint8_t a;
+	
 	// Constraints on the stride mean we always have multiple-of-4 bytes.
-	for (unsigned int i = 0; i < buffer.size(); i += 4)
-		*(ptr++) ^= 0xffffffff;
-
+	for (unsigned int i = 0; i < 480; i++)
+	{
+		for (unsigned int j = 0; j <640; j++)
+		{
+			if ((j==320)||(i==240))
+				*ptr ^= 0xFF;
+			ptr++;
+		};
+	};
 	return false;
 }
 
